@@ -1,35 +1,45 @@
 import React, { Component } from 'react';
 import PeopleListItem from './PeopleListItem';
+import GeneralHelper from '../helpers/GeneralHelper';
 
 class PeopleList extends Component {
     state = {
-        people: []
+        people: [],
     }
 
     componentDidMount() {
-        this.getPeople();
+        this.serverGetPeople()
+            .then(res => this.getPeople(res))
+            .catch(err => console.log(err));
     }
 
-    getPeople = () => {
-        const newPeople = [
-            {
-                id: 2,
-                username: "Sekams",
-                firstName: "Simon Peter",
-                lastName: "Ssekamatte",
-                online: true
-            },
-            {
-                id: 1,
-                username: "Wandobs",
-                firstName: "Brian Joram",
-                lastName: "Wandobire",
-                online: false
-            }
-        ]
-        this.setState({
-            people: newPeople
+    serverGetPeople = async () => {
+        const response = await fetch(GeneralHelper.apiBaseUrl + '/api/v1/users', {
+            method: "GET",
+            headers: new Headers({
+                'Content-Type': 'application/json',
+                'x-access-token': localStorage.getItem('token')
+            })
         });
+        const body = await response.json();
+
+        if (response.status !== 200) throw Error(body.error.message);
+
+        return body;
+    };
+
+    getPeople = (response) => {
+        if (response.status === 'success') {
+            this.setState({
+                people: response.data
+            });
+        } else {
+            console.log(response);
+        }
+    }
+
+    selectRecipient = (recipient) => {
+        this.props.selectConversation(recipient);
     }
 
     render() {
@@ -38,9 +48,10 @@ class PeopleList extends Component {
             people = this.state.people.map((person) => {
                 return (
                     <PeopleListItem
-                        name={person.firstName + " " + person.lastName}
-                        online={person.online}
-                        updatedAt="since 1 hour ago"
+                        key={person.id}
+                        person={person}
+                        selected={this.props.selectedRecipient && this.props.selectedRecipient === person.id}
+                        selectRecipient={person => this.selectRecipient(person)}
                     />
                 );
             });

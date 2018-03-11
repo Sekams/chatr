@@ -179,7 +179,7 @@ $(document).ready(function () {
     });
 
     // Reload page
-    $("a.profile").on("click", function () {
-        window.location.reload(true);
-    });
+    // $("a.profile").on("click", function () {
+    //     window.location.reload(true);
+    // });
 });

@@ -16,21 +16,12 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.DATE,
       defaultValue: new Date()
     }
-  }, {
-      classMethods: {
-        associate: function (models) {
-          // associations can be defined here
-          User.hasMany(models.Message);
-        },
-        generateHash(password) {
-          return bcrypt.hash(password, bcrypt.genSaltSync(10));
-        }
-      },
-      instanceMethods: {
-        validPassword(password) {
-          return bcrypt.compare(password, this.password);
-        }
-      }
-    });
+  });
+  User.generateHash = function (password) {
+    return bcrypt.hash(password, bcrypt.genSaltSync(10));
+  }
+  User.prototype.validPassword = function (password) {
+    return bcrypt.compare(password, this.password);
+  }
   return User;
 };

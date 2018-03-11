@@ -1,6 +1,16 @@
 import React, { Component } from 'react';
 
 class Navbar extends Component {
+    state = {
+        firstName: this.props.firstName
+    }
+    signOut = (event) => {
+        event.preventDefault();
+        localStorage.removeItem('logged');
+        localStorage.removeItem('token');
+        localStorage.removeItem('recipient');
+        this.props.signOut(event);
+    }
     render() {
         return (
             <nav className="navbar navbar-default navbar-fixed-top">
@@ -16,8 +26,8 @@ class Navbar extends Component {
                     </div>
                     <div id="navbar" className="navbar-collapse collapse">
                         <ul className="nav navbar-nav navbar-right">
-                            <li><a>Hi Sekams</a></li>
-                            <li><a href="">Sign out</a></li>
+                            <li><a>{"Hi " + localStorage.getItem('firstName')}</a></li>
+                            <li><a href="" onClick={event => this.signOut(event)}>Sign out</a></li>
                         </ul>
                     </div>
                 </div>
