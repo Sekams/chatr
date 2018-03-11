@@ -12,13 +12,6 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.DATE,
       defaultValue: new Date()
     }
-  }, {
-      classMethods: {
-        associate: function (models) {
-          // associations can be defined here
-          Message.belongsTo(models.User);
-        }
-      }
-    });
+  });
   return Message;
 };

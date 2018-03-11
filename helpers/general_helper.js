@@ -10,4 +10,3 @@ const validateParams = function (request, required_params) {
 }
 
 module.exports.validateParams = validateParams;
-module.exports.apiBaseUrl = "http://localhost:1337";

@@ -34,24 +34,19 @@ class UserForm extends Component {
     }
 
     signIn = (response) => {
-        console.log('Sign In: ', response);
         this.props.signIn(response);
     }
 
     handleSignInSubmit = (event) => {
-
-        console.log('On Submit Called');
-
         event.preventDefault();
-
         if (this.state.username && this.state.password) {
             let jsonData = {
                 "username": this.state.username,
-                "password": this.state.password,
+                "password": this.state.password
             };
 
             const signIn = async () => {
-                const response = await fetch(GeneralHelper.apiBaseUrl + '/api/v1/user/signin', {
+                const response = await fetch(GeneralHelper.apiBaseUrl + '/api/v1/auth/signin', {
                     method: "POST",
                     body: JSON.stringify(jsonData),
                     headers: new Headers({
@@ -82,11 +77,11 @@ class UserForm extends Component {
                 "firstName": this.state.firstName,
                 "lastName": this.state.lastName,
                 "username": this.state.username,
-                "password": this.state.password,
+                "password": this.state.password
             };
 
             const signUp = async () => {
-                const response = await fetch(GeneralHelper.apiBaseUrl + '/api/v1/user/signup', {
+                const response = await fetch(GeneralHelper.apiBaseUrl + '/api/v1/auth/signup', {
                     method: "POST",
                     body: JSON.stringify(jsonData),
                     headers: new Headers({
@@ -122,11 +117,6 @@ class UserForm extends Component {
                                 <div className="heading">
                                     <h2>Chatr</h2>
                                     <p>AnyTime AnyWhere</p>
-                                </div>
-
-                                <div className="success-msg">
-                                    <p>Great! You are one of our members now</p>
-                                    <a href="" className="profile">Your Profile</a>
                                 </div>
                             </div>
 

@@ -33,7 +33,10 @@ router.post(`${BASE_URL}/signup`, async (ctx) => {
                     ctx.status = 201;
                     ctx.body = {
                         status: 'success',
-                        token: AuthTokenHelper.generateToken(user.id)
+                        token: AuthTokenHelper.generateToken(user.id),
+                        userId: user.id,
+                        firstName: user.firstName,
+                        lastName: user.lastName
                     };
                 } else {
                     ctx.status = 400;
@@ -67,7 +70,10 @@ router.post(`${BASE_URL}/signin`, async (ctx) => {
                 ctx.status = 200;
                 ctx.body = {
                     status: 'success',
-                    token: AuthTokenHelper.generateToken(user.id)
+                    token: AuthTokenHelper.generateToken(user.id),
+                    userId: user.id,
+                    firstName: user.firstName,
+                    lastName: user.lastName
                 };
             } else {
                 ctx.status = 401;

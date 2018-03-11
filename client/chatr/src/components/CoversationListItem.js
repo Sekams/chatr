@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import GeneralHelper from '../helpers/GeneralHelper';
 
 class ConversationListItem extends Component {
     state = {
@@ -10,18 +11,21 @@ class ConversationListItem extends Component {
     }
 
     render() {
-        let view, className = null;
+        let mainView, className = null;
+        let now = new Date();
+        let then = new Date(this.state.time);
+        let time = GeneralHelper.timeDifference(now.getTime(), then.getTime());
         if (this.state.online) {
             className = "fa fa-circle online"
         } else {
             className = "fa fa-circle offline"
         }
         if (this.state.type === "sent") {
-            view =
+            mainView =
                 <li className="clearfix">
                     <div className="message-data align-right">
-                        <span className="message-data-time" >{this.state.time}</span> &nbsp; &nbsp;
-                        <span className="message-data-name" >Me</span>
+                        <span className="message-data-time" >{time}</span> &nbsp; &nbsp;
+                        <span className="message-data-name" >Me </span>
                         <i className="fa fa-circle me"></i>
                     </div>
 
@@ -30,11 +34,11 @@ class ConversationListItem extends Component {
                     </div>
                 </li>;
         } else {
-            view =
+            mainView =
                 <li>
                     <div className="message-data">
                         <span className="message-data-name"><i className={className}></i> {this.state.recipient.firstName}</span>
-                        <span className="message-data-time">{this.state.time}</span>
+                        <span className="message-data-time">{time}</span>
                     </div>
                     <div className="message my-message">
                         {this.state.body}
@@ -42,7 +46,9 @@ class ConversationListItem extends Component {
                 </li>
         }
         return (
-            { view }
+            <div>
+                {mainView}
+            </div>
         );
     }
 }
