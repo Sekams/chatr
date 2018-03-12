@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import ConversationListItem from './CoversationListItem';
 import avatar from '../images/user.svg';
 import GeneralHelper from '../helpers/GeneralHelper';
+import { addUser, fetchOlineUsers, fetchReceivedMessage, fetchSentMessage, sendMessage } from '../socketEvents/ChatEvents';
 
 class ConversationList extends Component {
     state = {
@@ -10,6 +11,8 @@ class ConversationList extends Component {
         messages: this.props.messages,
         message: ''
     }
+
+    componentDidMount
 
     handleMessage(message) {
         this.setState({ message: message });
