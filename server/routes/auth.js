@@ -35,6 +35,7 @@ router.post(`${BASE_URL}/signup`, async (ctx) => {
                         status: 'success',
                         token: AuthTokenHelper.generateToken(user.id),
                         userId: user.id,
+                        username: user.username,
                         firstName: user.firstName,
                         lastName: user.lastName
                     };
@@ -72,6 +73,7 @@ router.post(`${BASE_URL}/signin`, async (ctx) => {
                     status: 'success',
                     token: AuthTokenHelper.generateToken(user.id),
                     userId: user.id,
+                    username: user.username,
                     firstName: user.firstName,
                     lastName: user.lastName
                 };

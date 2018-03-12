@@ -4,6 +4,7 @@ import UserForm from './components/UserForm';
 import PeopleList from './components/PeopleList';
 import ConversationList from './components/ConversationList';
 import GeneralHelper from './helpers/GeneralHelper';
+import { addUser, signOut } from './socketEvents/ChatEvents';
 import './App.css';
 import './UserForm.css';
 import './UserFormFunctions.js';
@@ -31,6 +32,7 @@ class App extends Component {
         firstName: localStorage.getItem('firstName') ? localStorage.getItem('firstName') : '',
         lastName: localStorage.getItem('lastName') ? localStorage.getItem('lastName') : '',
       });
+      addUser(response.username, response.firstName, response.lastName, response.userId);
     }
   }
 
