@@ -39,7 +39,7 @@ class App extends Component {
         } else {
           const unreadMsgs = JSON.parse(localStorage.getItem('unreadMessages'));
           if (message.sender in unreadMsgs) {
-            if (!message.id in unreadMsgs[message.sender]) {
+            if (!(message.id in unreadMsgs[message.sender])) {
               unreadMsgs[message.sender][message.id] = message.body;
             }
           } else {
@@ -53,7 +53,6 @@ class App extends Component {
         this.setState({
           update: !this.state.update
         });
-        console.log(localStorage.getItem('unreadMessages'));
       });
     }
   }
