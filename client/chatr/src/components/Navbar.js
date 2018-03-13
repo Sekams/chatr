@@ -18,7 +18,6 @@ class Navbar extends Component {
         this.setState({
             dropMenuShowing: !this.state.dropMenuShowing
         });
-        console.log('Toggle Called, menu showing is ' + this.state.dropMenuShowing);
     }
 
     render() {
