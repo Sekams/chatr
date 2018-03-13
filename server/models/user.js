@@ -1,8 +1,7 @@
 'use strict';
-
 const bcrypt = require("bcrypt");
 
-module.exports = function (sequelize, DataTypes) {
+module.exports = (sequelize, DataTypes) => {
   var User = sequelize.define('User', {
     username: DataTypes.STRING,
     password: DataTypes.STRING,
@@ -13,6 +12,10 @@ module.exports = function (sequelize, DataTypes) {
       defaultValue: true
     },
     createdAt: {
+      type: DataTypes.DATE,
+      defaultValue: new Date()
+    },
+    updatedAt: {
       type: DataTypes.DATE,
       defaultValue: new Date()
     }
