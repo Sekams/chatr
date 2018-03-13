@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import ConversationListItem from './CoversationListItem';
 import avatar from '../images/user.svg';
-import { sendMessage, fetchReceivedMessage } from '../socketEvents/ChatEvents';
+import { sendMessage } from '../socketEvents/ChatEvents';
 
 class ConversationList extends Component {
     state = {
@@ -47,6 +47,7 @@ class ConversationList extends Component {
                         online={this.props.recipient.online}
                         body={message.body}
                         read={message.read}
+                        selectConversation={recipient => this.props.selectConversation(recipient)}
                     />
                 );
             });

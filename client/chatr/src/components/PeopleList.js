@@ -6,7 +6,8 @@ import { fetchOnlineUsers } from '../socketEvents/ChatEvents';
 class PeopleList extends Component {
     state = {
         people: [],
-        notification: ''
+        notification: '',
+        update: false
     }
 
     componentDidMount() {
@@ -17,7 +18,7 @@ class PeopleList extends Component {
             this.serverGetPeople()
                 .then(res => {
                     if (res.status === 'success') {
-                        this.getPeople(res.data, notification)
+                        this.getPeople(res.data, notification);
                     } else {
                         console.log(res);
                     }

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import GeneralHelper from '../helpers/GeneralHelper';
-import { readMessage, messageRead, fetchReceivedMessage } from '../socketEvents/ChatEvents';
+import { readMessage } from '../socketEvents/ChatEvents';
 
 class ConversationListItem extends Component {
     state = {
@@ -15,9 +15,6 @@ class ConversationListItem extends Component {
         if (this.props.last) {
             ReactDOM.findDOMNode(this).scrollIntoView();
         }
-        messageRead(notification => {
-            console.log(notification);
-        });
     }
 
     render() {
@@ -28,13 +25,12 @@ class ConversationListItem extends Component {
 
         const onChange = (isVisible) => {
             if (!this.props.read && isVisible) {
-                console.log(localStorage.getItem("unreadMessages"));
                 if (localStorage.getItem("unreadMessages")) {
                     const unreadMsgs = JSON.parse(localStorage.getItem('unreadMessages'));
                     if (this.props.sender in unreadMsgs && this.props.id in unreadMsgs[this.props.sender]) {
-                        console.log("Message Read: " + this.props.id);
                         delete unreadMsgs[this.props.sender][this.props.id];
                         localStorage.setItem("unreadMessages", JSON.stringify(unreadMsgs));
+                        this.props.selectConversation(this.props.recipient);
                         readMessage(this.props.id);
                     }
                 }
