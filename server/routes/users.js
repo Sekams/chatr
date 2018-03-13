@@ -23,7 +23,8 @@ router.get(BASE_URL, async (ctx) => {
                     id: {
                         [Op.ne]: verificationResult
                     }
-                }
+                },
+                order: [['online', 'DESC']]
             });
             if (users) {
                 let optimumUsers = [];
