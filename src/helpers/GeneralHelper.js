@@ -1,6 +1,6 @@
 const moment = require('moment');
 
-module.exports.apiBaseUrl = "http://localhost:1337";
+module.exports.apiBaseUrl = "https://chatr-api.herokuapp.com";
 
 /**
  * Return a timestamp with the format "m/d/yy h:MM:ss TT"

@@ -1,29 +1,20 @@
 {
   "name": "chatr",
-  "version": "1.0.0",
-  "description": "",
-  "main": "chatr.js",
-  "scripts": {
-    "client": "cd client/chatr && yarn start",
-    "server": "nodemon --harmony ./server/index.js",
-    "start": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "Simon Peter Ssekamatte @sekams",
-  "license": "MIT",
+  "version": "0.1.0",
+  "private": true,
   "dependencies": {
-    "@koa/cors": "^2.2.1",
-    "bcrypt": "^1.0.3",
-    "concurrently": "^3.5.1",
-    "jsonwebtoken": "^8.2.0",
-    "koa": "^2.5.0",
-    "koa-bodyparser": "^4.2.0",
-    "koa-router": "^7.4.0",
-    "nodemon": "^1.17.1",
-    "pg": "^7.4.1",
-    "pg-hstore": "^2.3.2",
-    "sequelize": "^4.35.2",
-    "sequelize-cli": "^4.0.0",
-    "socket.io": "^2.0.4"
+    "jquery": "^3.3.1",
+    "moment": "^2.21.0",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "react-scripts": "1.1.1",
+    "react-visibility-sensor": "^3.11.0",
+    "socket.io-client": "^2.0.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
   }
 }
