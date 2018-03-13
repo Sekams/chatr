@@ -4,7 +4,7 @@ import UserForm from './components/UserForm';
 import PeopleList from './components/PeopleList';
 import ConversationList from './components/ConversationList';
 import GeneralHelper from './helpers/GeneralHelper';
-import { addUser, signOut } from './socketEvents/ChatEvents';
+import { addUser, signOut, fetchReceivedMessage } from './socketEvents/ChatEvents';
 import './App.css';
 import './UserForm.css';
 import './UserFormFunctions.js';
@@ -15,7 +15,47 @@ class App extends Component {
     token: localStorage.getItem('token') ? localStorage.getItem('token') : '',
     userId: localStorage.getItem('userId') ? localStorage.getItem('userId') : 0,
     recipient: {},
-    messages: []
+    messages: [],
+    update: false
+  }
+
+  componentDidMount() {
+    // localStorage.removeItem('unreadMessages');
+    if (localStorage.getItem('logged')) {
+      addUser(
+        localStorage.getItem('username'),
+        localStorage.getItem('firstName'),
+        localStorage.getItem('lastName'),
+        localStorage.getItem('userId'),
+        true
+      );
+      fetchReceivedMessage(message => {
+        const newUnreadMsg = {};
+        newUnreadMsg[message.id] = message.body;
+        if (!localStorage.getItem('unreadMessages')) {
+          const newUnreadMsgCollection = {};
+          newUnreadMsgCollection[message.sender] = newUnreadMsg;
+          localStorage.setItem('unreadMessages', JSON.stringify(newUnreadMsgCollection));
+        } else {
+          const unreadMsgs = JSON.parse(localStorage.getItem('unreadMessages'));
+          if (message.sender in unreadMsgs) {
+            if (!message.id in unreadMsgs[message.sender]) {
+              unreadMsgs[message.sender][message.id] = message.body;
+            }
+          } else {
+            unreadMsgs[message.sender] = newUnreadMsg;
+          }
+          localStorage.setItem('unreadMessages', JSON.stringify(unreadMsgs));
+        }
+        if (this.state.recipient) {
+          this.selectConversation(this.state.recipient)
+        }
+        this.setState({
+          update: !this.state.update
+        });
+        console.log(localStorage.getItem('unreadMessages'));
+      });
+    }
   }
 
   signIn = (response) => {
@@ -23,6 +63,7 @@ class App extends Component {
       localStorage.setItem('logged', response.status === 'success');
       localStorage.setItem('token', response.token);
       localStorage.setItem('userId', response.userId);
+      localStorage.setItem('username', response.username);
       localStorage.setItem('firstName', response.firstName);
       localStorage.setItem('lastName', response.lastName);
       this.setState({
@@ -32,7 +73,13 @@ class App extends Component {
         firstName: localStorage.getItem('firstName') ? localStorage.getItem('firstName') : '',
         lastName: localStorage.getItem('lastName') ? localStorage.getItem('lastName') : '',
       });
-      addUser(response.username, response.firstName, response.lastName, response.userId);
+      addUser(
+        localStorage.getItem('username'),
+        localStorage.getItem('firstName'),
+        localStorage.getItem('lastName'),
+        localStorage.getItem('userId'),
+        true
+      );
     }
   }
 
@@ -45,6 +92,7 @@ class App extends Component {
       firstName: '',
       lastName: ''
     });
+    signOut();
     window.location.reload(true);
   }
 

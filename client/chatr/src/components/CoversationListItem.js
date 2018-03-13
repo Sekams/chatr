@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import GeneralHelper from '../helpers/GeneralHelper';
+import { readMessage, messageRead, fetchReceivedMessage } from '../socketEvents/ChatEvents';
 
 class ConversationListItem extends Component {
     state = {
@@ -7,14 +9,43 @@ class ConversationListItem extends Component {
         time: this.props.time,
         recipient: this.props.recipient,
         online: this.props.online,
-        body: this.props.body
+        body: this.props.body,
+    }
+    componentDidMount() {
+        if (this.props.last) {
+            ReactDOM.findDOMNode(this).scrollIntoView();
+        }
+        messageRead(notification => {
+            console.log(notification);
+        });
     }
 
     render() {
-        let mainView, className = null;
-        let now = new Date();
-        let then = new Date(this.state.time);
-        let time = GeneralHelper.timeDifference(now.getTime(), then.getTime());
+        let VisibilitySensor = require('react-visibility-sensor');
+        let mainView, className, dateLabel = null;
+        const time = GeneralHelper.timeStamp(this.state.time);
+        const date = GeneralHelper.dateStamp(this.state.time);
+
+        const onChange = (isVisible) => {
+            if (!this.props.read && isVisible) {
+                console.log(localStorage.getItem("unreadMessages"));
+                if (localStorage.getItem("unreadMessages")) {
+                    const unreadMsgs = JSON.parse(localStorage.getItem('unreadMessages'));
+                    if (this.props.sender in unreadMsgs && this.props.id in unreadMsgs[this.props.sender]) {
+                        console.log("Message Read: " + this.props.id);
+                        delete unreadMsgs[this.props.sender][this.props.id];
+                        localStorage.setItem("unreadMessages", JSON.stringify(unreadMsgs));
+                        readMessage(this.props.id);
+                    }
+                }
+            }
+        }
+
+        if (localStorage.getItem("dateLabel") && localStorage.getItem("dateLabel") !== date) {
+            localStorage.setItem("dateLabel", date);
+            dateLabel = <div className="date-label"><span>{date}</span></div>;
+        }
+
         if (this.state.online) {
             className = "fa fa-circle online"
         } else {
@@ -23,6 +54,7 @@ class ConversationListItem extends Component {
         if (this.state.type === "sent") {
             mainView =
                 <li className="clearfix">
+                    {dateLabel}
                     <div className="message-data align-right">
                         <span className="message-data-time" >{time}</span> &nbsp; &nbsp;
                         <span className="message-data-name" >Me </span>
@@ -36,6 +68,7 @@ class ConversationListItem extends Component {
         } else {
             mainView =
                 <li>
+                    {dateLabel}
                     <div className="message-data">
                         <span className="message-data-name"><i className={className}></i> {this.state.recipient.firstName}</span>
                         <span className="message-data-time">{time}</span>
@@ -46,9 +79,9 @@ class ConversationListItem extends Component {
                 </li>
         }
         return (
-            <div>
+            <VisibilitySensor onChange={onChange}>
                 {mainView}
-            </div>
+            </VisibilitySensor>
         );
     }
 }

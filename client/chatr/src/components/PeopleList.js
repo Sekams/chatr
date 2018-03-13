@@ -1,16 +1,29 @@
 import React, { Component } from 'react';
 import PeopleListItem from './PeopleListItem';
 import GeneralHelper from '../helpers/GeneralHelper';
+import { fetchOnlineUsers } from '../socketEvents/ChatEvents';
 
 class PeopleList extends Component {
     state = {
         people: [],
+        notification: ''
     }
 
     componentDidMount() {
-        this.serverGetPeople()
-            .then(res => this.getPeople(res))
-            .catch(err => console.log(err));
+        fetchOnlineUsers(notification => {
+            this.setState({
+                people: []
+            })
+            this.serverGetPeople()
+                .then(res => {
+                    if (res.status === 'success') {
+                        this.getPeople(res.data, notification)
+                    } else {
+                        console.log(res);
+                    }
+                })
+                .catch(err => console.log(err));
+        });
     }
 
     serverGetPeople = async () => {
@@ -28,14 +41,11 @@ class PeopleList extends Component {
         return body;
     };
 
-    getPeople = (response) => {
-        if (response.status === 'success') {
-            this.setState({
-                people: response.data
-            });
-        } else {
-            console.log(response);
-        }
+    getPeople = (response, notification) => {
+        this.setState({
+            people: response,
+            notification: notification
+        });
     }
 
     selectRecipient = (recipient) => {
@@ -56,7 +66,7 @@ class PeopleList extends Component {
                 );
             });
         } else {
-            people = <h3>No people to show</h3>;
+            people = <h3 style={{ padding: "30px" }}>No people to show</h3>;
         }
         return (
             <div className="people-list" id="people-list">

@@ -1,36 +1,22 @@
+const moment = require('moment');
+
 module.exports.apiBaseUrl = "http://localhost:1337";
 
-module.exports.timeDifference = (current, previous) => {
+/**
+ * Return a timestamp with the format "m/d/yy h:MM:ss TT"
+ * @type {Date}
+ */
 
-    const msPerMinute = 60 * 1000;
-    const msPerHour = msPerMinute * 60;
-    const msPerDay = msPerHour * 24;
-    const msPerMonth = msPerDay * 30;
-    const msPerYear = msPerDay * 365;
+module.exports.dateStamp = (date) => {
+    return moment(date).calendar(null, {
+        sameDay: '[Today]',
+        lastDay: '[Yesterday]',
+        lastWeek: 'dddd',
+        sameElse: 'MMMM Do, YYYY'
+    });
+}
 
-    let elapsed = current - previous;
-
-    if (elapsed < msPerMinute) {
-        return Math.round(elapsed / 1000) + ' seconds ago';
-    }
-
-    else if (elapsed < msPerHour) {
-        return Math.round(elapsed / msPerMinute) + ' minutes ago';
-    }
-
-    else if (elapsed < msPerDay) {
-        return Math.round(elapsed / msPerHour) + ' hours ago';
-    }
-
-    else if (elapsed < msPerMonth) {
-        return 'approximately ' + Math.round(elapsed / msPerDay) + ' days ago';
-    }
-
-    else if (elapsed < msPerYear) {
-        return 'approximately ' + Math.round(elapsed / msPerMonth) + ' months ago';
-    }
-
-    else {
-        return 'approximately ' + Math.round(elapsed / msPerYear) + ' years ago';
-    }
+module.exports.timeStamp = (date) => {
+    // Return the formatted string
+    return moment(new Date(date)).format('h:mm a');
 }

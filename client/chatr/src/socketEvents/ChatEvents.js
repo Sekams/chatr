@@ -2,20 +2,17 @@ import socketClient from 'socket.io-client';
 import GeneralHelper from '../helpers/GeneralHelper';
 
 const socketio = socketClient(GeneralHelper.apiBaseUrl);
-const userId = Number(localStorage.getItem('userId'));
 
-export const addUser = (username, firstName, LastName, userId) => socketio.emit('add user', { username, firstName, LastName, userId });
+export const addUser = (username, firstName, lastName, id, online) => { socketio.emit('add user', { username, firstName, lastName, id, online }) };
 
-export const fetchOlineUsers = (callback) => { socketio.on('online users', onlineUsers => callback(onlineUsers)) };
+export const fetchOnlineUsers = (callback) => { socketio.on('online users changed', notification => callback(notification)) };
 
-export const sendMessage = (recipient, body, socket) => {
-    socketio.emit('add message',
-        { userId, recipient, socket, body }
-    )
-};
+export const sendMessage = (sender, recipient, body) => { socketio.emit('add message', { sender, recipient, body }) };
+
+export const readMessage = (messageId) => { socketio.emit('read message', messageId) };
+
+export const messageRead = (callback) => { socketio.on('message read', notification => callback(notification)) };
 
 export const fetchReceivedMessage = (callback) => { socketio.on('received', message => callback(message)) };
-
-export const fetchSentMessage = (callback) => { socketio.on('sent', message => callback(message)) };
 
 export const signOut = () => { socketio.emit('signout') };
