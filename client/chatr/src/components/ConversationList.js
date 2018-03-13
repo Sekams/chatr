@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import ConversationListItem from './CoversationListItem';
 import avatar from '../images/user.svg';
-import GeneralHelper from '../helpers/GeneralHelper';
-import { addUser, fetchOlineUsers, fetchReceivedMessage, fetchSentMessage, sendMessage } from '../socketEvents/ChatEvents';
+import { sendMessage, fetchReceivedMessage } from '../socketEvents/ChatEvents';
 
 class ConversationList extends Component {
     state = {
@@ -12,8 +11,6 @@ class ConversationList extends Component {
         message: ''
     }
 
-    componentDidMount
-
     handleMessage(message) {
         this.setState({ message: message });
     }
@@ -21,55 +18,35 @@ class ConversationList extends Component {
     handleSubmit = (event) => {
         event.preventDefault();
         if (this.state.message) {
-            let jsonData = {
-                "body": this.state.message
-            };
-
-            const signIn = async () => {
-                const response = await fetch(GeneralHelper.apiBaseUrl + '/api/v1/' + this.props.recipient.id + '/messages', {
-                    method: "POST",
-                    body: JSON.stringify(jsonData),
-                    headers: new Headers({
-                        'Content-Type': 'application/json',
-                        'x-access-token': localStorage.getItem('token')
-                    })
-                });
-                const body = await response.json();
-
-                if (response.status !== 201) throw Error(body.message);
-
-                return body;
-            };
-
-            signIn()
-                .then(res => {
-                    this.props.selectConversation(this.props.recipient)
-                    this.handleMessage('');
-                })
-                .catch(err => console.log(err));
-        } else {
-            //Passwords don't match
+            sendMessage(this.props.userId, this.props.recipient.id, this.state.message);
+            this.props.selectConversation(this.props.recipient)
+            this.handleMessage('');
         }
     }
 
     render() {
-        let messages = null;
+        let messages, dateLabel = null;
         let mainView =
             <div style={{ height: "785px" }}>
                 <h3 style={{ height: "785px", paddingRight: "10%", paddingLeft: "10%", textAlign: "center", paddingTop: "50%" }}>
                     Select recipient in left pane to start chatting
                 </h3>
             </div>;
+
         if (this.props.messages.length > 0) {
-            messages = this.props.messages.map((message) => {
+            messages = this.props.messages.map((message, idx) => {
                 return (
                     <ConversationListItem
                         key={message.id}
+                        id={message.id}
+                        last={idx + 1 === this.props.messages.length ? true : false}
                         type={"" + message.sender === "" + this.props.userId ? "sent" : "received"}
                         time={message.createdAt}
+                        sender={message.sender}
                         recipient={this.props.recipient}
                         online={this.props.recipient.online}
                         body={message.body}
+                        read={message.read}
                     />
                 );
             });
@@ -90,6 +67,7 @@ class ConversationList extends Component {
                     </div>
 
                     <div className="chat-history">
+                        {dateLabel}
                         <ul style={{ listStyleType: 'none' }}>
                             {messages}
                         </ul>
