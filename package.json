@@ -9,6 +9,7 @@
     "react-dom": "^16.2.0",
     "react-scripts": "1.1.1",
     "react-visibility-sensor": "^3.11.0",
+    "serve": "^6.5.3",
     "socket.io-client": "^2.0.4"
   },
   "scripts": {
